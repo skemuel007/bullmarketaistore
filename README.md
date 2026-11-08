@@ -28,29 +28,45 @@ Dependencies point inward only; the Domain layer references nothing.
 
 ## Getting Started
 
-### 1. Start the database
+### Run with Podman (Full Stack or Services)
+
+Start the full stack (PostgreSQL, .NET API backend, React frontend):
 
 ```bash
-podman-compose up -d      # or: podman compose up -d
+podman-compose up -d --build    # or: podman compose up -d --build
 ```
 
-Stop it with `podman-compose down`.
+Or run services individually:
 
-### 2. Run the API
+```bash
+podman-compose up -d postgres   # Start Database only
+podman-compose up -d api        # Start Backend API (+ postgres)
+podman-compose up -d frontend   # Start Frontend storefront (+ api + postgres)
+```
 
+- Frontend is served at http://localhost:5173
+- Backend API is served at http://localhost:5164 (Scalar docs: http://localhost:5164/scalar/v1)
+
+Stop services with `podman-compose down`.
+
+### Run Locally (Development)
+
+1. Start database:
+```bash
+podman-compose up -d postgres
+```
+
+2. Run the API:
 ```bash
 dotnet run --project backend/src/BullMarket.Api
 ```
 
-### 3. Run the frontend
-
+3. Run the frontend:
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-
-The frontend is served at http://localhost:5173.
 
 ## Build and Test
 

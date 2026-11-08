@@ -20,7 +20,7 @@ services:
   api:
     build:
       context: ./backend
-      dockerfile: Containerfile
+      dockerfile: Dockerfile
     container_name: bullmarket-api
     restart: unless-stopped
     ports:
@@ -33,6 +33,20 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:5164
+        VITE_CUSTOMER_ID: 11111111-1111-1111-1111-111111111111
+    container_name: bullmarket-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
 
 volumes:
   bullmarket-postgres-data:

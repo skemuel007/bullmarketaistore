@@ -1,32 +1,52 @@
-# React + TypeScript + Vite
+# BullMarket AI Store – Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+The BullMarket AI Store customer storefront, built with React, TypeScript, Vite, Tailwind CSS, TanStack Query, React Router, Axios, and Vitest.
 
-Currently, two official plugins are available:
+## Run locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The Vite development server proxies `/api` and `/health` to the backend at http://localhost:5164.
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Copy `.env.example` to `.env.local` when the API or demo customer differs from the defaults.
+
+## Quality commands
+
+```bash
+npm run typecheck
+npm run lint
+npm test
+npm run build
+```
+
+## Structure
+
+- `src/app` — application providers and routing
+- `src/components` — shared layout and UI primitives
+- `src/features` — feature-owned catalog, cart, order, and home modules
+- `src/config` — runtime configuration boundary
+- `src/lib` — HTTP and formatting utilities
+- `src/pages` — cross-feature route pages
+- `src/test` — shared test setup
+
+The customer ID defaults to the deterministic development customer seeded by the API. Authentication will replace this development bridge in a later phase.
+
+## Podman / Docker
+
+From the repository root, start the complete stack with:
+
+```bash
+podman-compose up -d --build   # or: podman compose up -d --build
+```
+
+To run individual services:
+
+```bash
+podman-compose up -d api        # Backend API only
+podman-compose up -d frontend   # Frontend storefront only
+```
+
+The production frontend is served by Nginx at http://localhost:5173. Nginx handles SPA route fallback and proxies `/api` and `/health` to the API container over the internal compose network.

@@ -14,9 +14,10 @@
 - Add tests in `backend/tests/` for new backend behavior.
 
 ## Commands
-- Start Database: `podman-compose up -d` (or `podman compose up -d`)
-- Stop Database: `podman-compose down`
+- Start Full Stack (Database, Backend, Frontend): `podman-compose up -d --build` (or `podman compose up -d --build`)
+- Start Services individually: `podman-compose up -d postgres`, `podman-compose up -d api`, `podman-compose up -d frontend`
+- Stop Stack: `podman-compose down`
 - Backend build: `dotnet build backend/BullMarketAiStore.slnx`
 - Backend tests: `dotnet test backend/BullMarketAiStore.slnx`
-- Run API: `dotnet run --project backend/src/BullMarket.Api`
-- Frontend: `cd frontend && npm install && npm run dev` (build: `npm run build`)
+- Run API locally: `dotnet run --project backend/src/BullMarket.Api`
+- Frontend locally: `cd frontend && npm install && npm run dev` (build: `npm run build`, test: `npm test`)
