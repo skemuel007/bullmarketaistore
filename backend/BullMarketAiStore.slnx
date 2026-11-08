@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BullMarket.Api/BullMarket.Api.csproj" />
+    <Project Path="src/BullMarket.Application/BullMarket.Application.csproj" />
+    <Project Path="src/BullMarket.Domain/BullMarket.Domain.csproj" />
+    <Project Path="src/BullMarket.Infrastructure/BullMarket.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BullMarket.Api.Tests/BullMarket.Api.Tests.csproj" />
+    <Project Path="tests/BullMarket.Application.Tests/BullMarket.Application.Tests.csproj" />
+    <Project Path="tests/BullMarket.Domain.Tests/BullMarket.Domain.Tests.csproj" />
+  </Folder>
+  <Folder Name="/docs/">
+    <File Path="../docs/migrations.md" />
+    <File Path="../docs/database-schema.md" />
+    <File Path="../docs/class-diagrams.md" />
+    <File Path="../docs/design-pattern-recommendations.md" />
+  </Folder>
+</Solution>

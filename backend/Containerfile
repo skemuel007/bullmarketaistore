@@ -1,0 +1,43 @@
+# Multi-stage Containerfile for BullMarket AI Store API (.NET 10)
+# Compatible with Podman and Docker
+
+# Stage 1: Runtime base with non-root user
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+WORKDIR /app
+EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:8080
+USER $APP_UID
+
+# Stage 2: SDK build environment
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /src
+
+# Copy solution and project files first to maximize layer caching
+COPY ["BullMarketAiStore.slnx", "./"]
+COPY ["src/BullMarket.Domain/BullMarket.Domain.csproj", "src/BullMarket.Domain/"]
+COPY ["src/BullMarket.Application/BullMarket.Application.csproj", "src/BullMarket.Application/"]
+COPY ["src/BullMarket.Infrastructure/BullMarket.Infrastructure.csproj", "src/BullMarket.Infrastructure/"]
+COPY ["src/BullMarket.Api/BullMarket.Api.csproj", "src/BullMarket.Api/"]
+COPY ["tests/BullMarket.Domain.Tests/BullMarket.Domain.Tests.csproj", "tests/BullMarket.Domain.Tests/"]
+COPY ["tests/BullMarket.Application.Tests/BullMarket.Application.Tests.csproj", "tests/BullMarket.Application.Tests/"]
+COPY ["tests/BullMarket.Api.Tests/BullMarket.Api.Tests.csproj", "tests/BullMarket.Api.Tests/"]
+
+# Restore all dependencies
+RUN dotnet restore "BullMarketAiStore.slnx"
+
+# Copy remaining source code
+COPY . .
+
+# Build API project
+WORKDIR "/src/src/BullMarket.Api"
+RUN dotnet build "BullMarket.Api.csproj" -c Release -o /app/build --no-restore
+
+# Stage 3: Publish optimized output
+FROM build AS publish
+RUN dotnet publish "BullMarket.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false --no-restore
+
+# Stage 4: Final runtime image
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "BullMarket.Api.dll"]

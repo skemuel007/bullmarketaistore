@@ -1,0 +1,139 @@
+@BullMarket.Api_HostAddress = http://localhost:5164
+@customerId = 11111111-1111-1111-1111-111111111111
+@productId = 00000000-0000-0000-0000-000000000000
+@orderId = 00000000-0000-0000-0000-000000000000
+
+### Health Checks
+GET {{BullMarket.Api_HostAddress}}/health
+Accept: application/json
+
+### Liveness Probe
+GET {{BullMarket.Api_HostAddress}}/health/live
+
+### Readiness Probe
+GET {{BullMarket.Api_HostAddress}}/health/ready
+
+### OpenAPI Document
+GET {{BullMarket.Api_HostAddress}}/openapi/v1.json
+Accept: application/json
+
+### Scalar API Reference (open in browser)
+GET {{BullMarket.Api_HostAddress}}/scalar/v1
+
+### ----------------------------------------------------------------------------
+### Catalog & Products
+### ----------------------------------------------------------------------------
+
+### Get Categories
+GET {{BullMarket.Api_HostAddress}}/api/categories
+Accept: application/json
+
+### Get Products (Paged)
+GET {{BullMarket.Api_HostAddress}}/api/products?page=1&pageSize=20
+Accept: application/json
+
+### Search Products
+GET {{BullMarket.Api_HostAddress}}/api/products/search?keyword=laptop&category=ai-laptops&aiReady=true&minPrice=100000&maxPrice=300000&page=1&pageSize=20
+Accept: application/json
+
+### Get Product by ID
+GET {{BullMarket.Api_HostAddress}}/api/products/{{productId}}
+Accept: application/json
+
+### ----------------------------------------------------------------------------
+### Inventory
+### ----------------------------------------------------------------------------
+
+### Get Product Inventory
+GET {{BullMarket.Api_HostAddress}}/api/inventory/{{productId}}
+Accept: application/json
+
+### Check Inventory Availability
+GET {{BullMarket.Api_HostAddress}}/api/inventory/{{productId}}/availability?quantity=2
+Accept: application/json
+
+### ----------------------------------------------------------------------------
+### Customers
+### ----------------------------------------------------------------------------
+
+### Get Customer Profile
+GET {{BullMarket.Api_HostAddress}}/api/customers/{{customerId}}
+Accept: application/json
+
+### Get Customer Orders
+GET {{BullMarket.Api_HostAddress}}/api/customers/{{customerId}}/orders
+Accept: application/json
+
+### ----------------------------------------------------------------------------
+### Shopping Cart
+### ----------------------------------------------------------------------------
+
+### Get Customer Cart
+GET {{BullMarket.Api_HostAddress}}/api/cart/{{customerId}}
+Accept: application/json
+
+### Add Item to Cart
+POST {{BullMarket.Api_HostAddress}}/api/cart/{{customerId}}/items
+Content-Type: application/json
+Accept: application/json
+
+{
+  "productId": "{{productId}}",
+  "quantity": 1
+}
+
+### Update Item Quantity in Cart
+PUT {{BullMarket.Api_HostAddress}}/api/cart/{{customerId}}/items/{{productId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "quantity": 2
+}
+
+### Remove Item from Cart
+DELETE {{BullMarket.Api_HostAddress}}/api/cart/{{customerId}}/items/{{productId}}
+
+### Clear Entire Cart
+DELETE {{BullMarket.Api_HostAddress}}/api/cart/{{customerId}}
+
+### ----------------------------------------------------------------------------
+### Orders
+### ----------------------------------------------------------------------------
+
+### Create Order from Cart
+POST {{BullMarket.Api_HostAddress}}/api/orders
+Content-Type: application/json
+Accept: application/json
+
+{
+  "customerId": "{{customerId}}",
+  "shippingAddress": {
+    "recipientName": "Aarav Sharma",
+    "line1": "101 Developer Avenue",
+    "line2": "Tech Park",
+    "city": "Bengaluru",
+    "stateOrProvince": "Karnataka",
+    "postalCode": "560001",
+    "countryCode": "IN",
+    "phone": "+91-9000000000"
+  },
+  "billingAddress": {
+    "recipientName": "Aarav Sharma",
+    "line1": "101 Developer Avenue",
+    "line2": "Tech Park",
+    "city": "Bengaluru",
+    "stateOrProvince": "Karnataka",
+    "postalCode": "560001",
+    "countryCode": "IN",
+    "phone": "+91-9000000000"
+  }
+}
+
+### Get Order by ID
+GET {{BullMarket.Api_HostAddress}}/api/orders/{{orderId}}
+Accept: application/json
+
+### Cancel Order
+POST {{BullMarket.Api_HostAddress}}/api/orders/{{orderId}}/cancel
+Accept: application/json

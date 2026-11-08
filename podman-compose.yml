@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: bullmarket-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: bullmarket
+      POSTGRES_USER: bullmarket
+      POSTGRES_PASSWORD: BullMarket_Local_2026!
+    ports:
+      - "5432:5432"
+    volumes:
+      - bullmarket-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: "pg_isready -U bullmarket -d bullmarket"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Containerfile
+    container_name: bullmarket-api
+    restart: unless-stopped
+    ports:
+      - "5164:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__BullMarketAiStore: "Host=postgres;Port=5432;Database=bullmarket;Username=bullmarket;Password=BullMarket_Local_2026!"
+      Database__ApplyMigrationsOnStartup: "true"
+      Frontend__AllowedOrigins__0: "http://localhost:5173"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  bullmarket-postgres-data:
+    name: bullmarket-postgres-data
